@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
+
 var routes = require('./api/routes');
 
 // Define the port to run on
@@ -26,5 +27,5 @@ app.use('/api', routes);
 // Listen for requests
 var server = app.listen(app.get('port'), function() {
   var port = server.address().port;
-  console.log('Web Server is connected on port ' + port);
+  console.log('Magic happens on port ' + port);
 });
