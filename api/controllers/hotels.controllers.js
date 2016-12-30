@@ -46,7 +46,6 @@ var runGeoQuery = function(req, res) {
 };
 
 module.exports.hotelsGetAll = function(req, res) {
-
   console.log('GET the hotels');
   console.log(req.query);
 
@@ -92,6 +91,7 @@ module.exports.hotelsGetAll = function(req, res) {
     .exec(function(err, hotels) {
       console.log(err);
       console.log(hotels);
+      console.log(req.body);
       if (err) {
         console.log("Error finding hotels");
         res
@@ -163,11 +163,13 @@ module.exports.hotelsAddOne = function(req, res) {
       }
     }, function(err, hotel) {
       if (err) {
+        console.log("err", req.body);
         console.log("Error creating hotel");
         res
           .status(400)
           .json(err);
       } else {
+        //console.log("err", req.body);
         console.log("Hotel created!", hotel);
         res
           .status(201)
@@ -178,59 +180,7 @@ module.exports.hotelsAddOne = function(req, res) {
 };
 
 
-module.exports.hotelsUpdateOne = function(req, res) {
-  var hotelId = req.params.hotelId;
 
-  console.log('GET hotelId', hotelId);
-
-  Hotel
-    .findById(hotelId)
-    .select('-reviews -rooms')
-    .exec(function(err, hotel) {
-      if (err) {
-        console.log("Error finding hotel");
-        res
-          .status(500)
-          .json(err);
-          return;
-      } else if(!hotel) {
-        console.log("HotelId not found in database", hotelId);
-        res
-          .status(404)
-          .lson({
-            "message" : "Hotel ID not found " + hotelId
-          });
-          return;
-      }
-
-      hotel.name = req.body.name;
-      hotel.description = req.body.description;
-      hotel.stars = parseInt(req.body.stars,10);
-      hotel.services = _splitArray(req.body.services);
-      hotel.photos = _splitArray(req.body.photos);
-      hotel.currency = req.body.currency;
-      hotel.location = {
-        address : req.body.address,
-        coordinates : [parseFloat(req.body.lng), parseFloat(req.body.lat)]
-      };
-
-      hotel
-        .save(function(err, hotelUpdated) {
-          if(err) {
-            res
-              .status(500)
-              .json(err);
-          } else {
-            res
-              .status(204)
-              .json();
-          }
-        });
-
-
-    });
-
-};
 
 
 
